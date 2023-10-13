@@ -10,7 +10,7 @@
 
     <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
     <script type="text/javascript"
-      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      src="{{ config('midtrans.snap_js') }}"
       data-client-key="{{ config('midtrans.client_key') }}"></script>
     <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
   </head>
@@ -18,7 +18,7 @@
     <div class="container my-3">
         <h1><i class="bi bi-shop mb-4">&nbsp;</i>Store ddn</h1>
 
-        <h5>Detail Pesanan</h5>
+        <h5>Pesanan</h5>
 
         <table class="table">
             <tr>
@@ -61,7 +61,9 @@
         window.snap.pay('{{ $snapToken }}', {
           onSuccess: function(result){
             /* You may add your own implementation here */
-            alert("payment success!"); console.log(result);
+            // alert("payment success!");
+            window.location.href = '/invoice/{{ $order->id }}'
+            console.log(result);
           },
           onPending: function(result){
             /* You may add your own implementation here */
