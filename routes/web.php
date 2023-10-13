@@ -16,4 +16,3 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [OrderController::class, 'index']);
 Route::post('/checkout', [OrderController::class, 'store']);
-Route::post('/midtrans-callback', [OrderController::class, 'callback']);
