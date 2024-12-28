@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Midtrans\Snap;
+use Midtrans\Config;
 use App\Models\Order;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -28,7 +31,7 @@ class OrderController extends Controller
             if ($request->transaction_status == 'capture' or $request->transaction_status == 'settlement') {
                 $order = Order::find($request->order_id);
                 $order->update([
-                    'status' => 'Paid',
+                    'status' => 'paid',
                 ]);
             }
         }
@@ -39,10 +42,11 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        $request->request->add(['total_price' => $request->qty * 100000, 'status' => 'Unpaid']);
+        $request->request->add(['total_price' => $request->qty * 50000, 'status' => 'Unpaid']);
+        $order = Order::create($request->all());
         // dd($request->all());
 
-        $order = Order::create($request->all());
+
 
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey =config('midtrans.server_key');
@@ -55,7 +59,7 @@ class OrderController extends Controller
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => $order->id,
+                'order_id' => $order->order_id,
                 'gross_amount' => $order->total_price,
             ),
             'customer_details' => array(
